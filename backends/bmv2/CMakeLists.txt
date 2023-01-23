@@ -91,8 +91,16 @@ set(BMV2_BACKEND_COMMON_HDRS
 set(IR_DEF_FILES ${IR_DEF_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/bmv2.def PARENT_SCOPE)
 
 build_unified(BMV2_BACKEND_COMMON_SRCS)
-add_library(bmv2backend ${P4C_STATIC_BUILD} ${BMV2_BACKEND_COMMON_SRCS} ${BMV2_SIMPLE_SWITCH_LIB_SRCS} ${BMV2_PSA_SWITCH_LIB_SRCS})
+add_library(bmv2backend ${P4C_STATIC_BUILD} ${BMV2_BACKEND_COMMON_SRCS})
 add_dependencies(bmv2backend genIR frontend)
+
+build_unified(BMV2_SIMPLE_SWITCH_LIB_SRCS)
+add_library(bmv2ss ${P4C_STATIC_BUILD} ${BMV2_SIMPLE_SWITCH_LIB_SRCS})
+target_link_libraries(bmv2ss bmv2backend ${P4C_LIBRARIES} ${P4C_LIB_DEPS})
+
+build_unified(BMV2_PSA_SWITCH_LIB_SRCS)
+add_library(bmv2psa ${P4C_STATIC_BUILD} ${BMV2_PSA_SWITCH_LIB_SRCS})
+target_link_libraries(bmv2psa bmv2backend ${P4C_LIBRARIES} ${P4C_LIB_DEPS})
 
 build_unified(BMV2_SIMPLE_SWITCH_SRCS)
 add_executable(p4c-bm2-ss ${BMV2_SIMPLE_SWITCH_SRCS})
