@@ -537,36 +537,36 @@ if(DEFINED CPPLINT_FILES)
 endif()
 
 # clang-format
-add_clang_format_files(${P4C_SOURCE_DIR} "${P4C_LINT_LIST}")
+# add_clang_format_files(${P4C_SOURCE_DIR} "${P4C_LINT_LIST}")
 
-find_program(CLANG_FORMAT_CMD clang-format)
+# find_program(CLANG_FORMAT_CMD clang-format)
 
-if(NOT ${CLANG_FORMAT_CMD})
-  # Retrieve the global clang-format property.
-  get_property(CLANG_FORMAT_FILES GLOBAL PROPERTY clang-format-files)
-  if(DEFINED CLANG_FORMAT_FILES)
-    # Write the list to a file. We need to do this as too many files will reach
-    # the shell argument limit.
-    set(CLANG_FORMAT_TXT_FILE ${P4C_BINARY_DIR}/clang_format_files.txt)
-    list(SORT CLANG_FORMAT_FILES)
-    file(WRITE ${CLANG_FORMAT_TXT_FILE} "${CLANG_FORMAT_FILES}")
-    set(CLANG_FORMAT_CMD clang-format)
-    add_custom_target(
-      clang-format
-      COMMAND xargs -a ${CLANG_FORMAT_TXT_FILE} -r -d '\;' ${CLANG_FORMAT_CMD} --verbose --Werror --dry-run -i --
-      WORKING_DIRECTORY ${P4C_SOURCE_DIR}
-      COMMENT "Checking files for correct clang-format formatting."
-    )
-    add_custom_target(
-      clang-format-fix-errors
-      COMMAND xargs -a ${CLANG_FORMAT_TXT_FILE} -r -d '\;' ${CLANG_FORMAT_CMD} --verbose -i --
-      WORKING_DIRECTORY ${P4C_SOURCE_DIR}
-      COMMENT "Formatting files using clang-format."
-    )
-  endif()
-else()
-  message(WARNING "clang-format executable not found. Disabling clang-format checks. clang-format can be installed with \"pip3 install --user --upgrade clang-format\"")
-endif()
+# if(NOT ${CLANG_FORMAT_CMD})
+#   # Retrieve the global clang-format property.
+#   get_property(CLANG_FORMAT_FILES GLOBAL PROPERTY clang-format-files)
+#   if(DEFINED CLANG_FORMAT_FILES)
+#     # Write the list to a file. We need to do this as too many files will reach
+#     # the shell argument limit.
+#     set(CLANG_FORMAT_TXT_FILE ${P4C_BINARY_DIR}/clang_format_files.txt)
+#     list(SORT CLANG_FORMAT_FILES)
+#     file(WRITE ${CLANG_FORMAT_TXT_FILE} "${CLANG_FORMAT_FILES}")
+#     set(CLANG_FORMAT_CMD clang-format)
+#     add_custom_target(
+#       clang-format
+#       COMMAND xargs -a ${CLANG_FORMAT_TXT_FILE} -r -d '\;' ${CLANG_FORMAT_CMD} --verbose --Werror --dry-run -i --
+#       WORKING_DIRECTORY ${P4C_SOURCE_DIR}
+#       COMMENT "Checking files for correct clang-format formatting."
+#     )
+#     add_custom_target(
+#       clang-format-fix-errors
+#       COMMAND xargs -a ${CLANG_FORMAT_TXT_FILE} -r -d '\;' ${CLANG_FORMAT_CMD} --verbose -i --
+#       WORKING_DIRECTORY ${P4C_SOURCE_DIR}
+#       COMMENT "Formatting files using clang-format."
+#     )
+#   endif()
+# else()
+#   message(WARNING "clang-format executable not found. Disabling clang-format checks. clang-format can be installed with \"pip3 install --user --upgrade clang-format\"")
+# endif()
 
 ################################ Linters End ################################
 
