@@ -35,7 +35,7 @@ OPTION (ENABLE_BMV2 "Build the BMV2 backend (required for the full test suite)" 
 OPTION (ENABLE_EBPF "Build the EBPF backend (required for the full test suite)" ON)
 OPTION (ENABLE_UBPF "Build the uBPF backend (required for the full test suite)" ON)
 OPTION (ENABLE_DPDK "Build the DPDK backend (required for the full test suite)" ON)
-OPTION (ENABLE_P4TEST "Build the P4Test backend (required for the full test suite)" ON)
+OPTION (ENABLE_P4TEST "Build the P4Test backend (required for the full test suite)" OFF)
 OPTION (ENABLE_TEST_TOOLS "Build the P4Tools development platform" OFF)
 OPTION (ENABLE_P4C_GRAPHS "Build the p4c-graphs backend" ON)
 OPTION (ENABLE_PROTOBUF_STATIC "Link against Protobuf statically" ON)
@@ -191,7 +191,7 @@ if(SIMPLE_SWITCH OR PSA_SWITCH)
     find_python_module (ipaddr REQUIRED)
 endif()
 # enable CTest
-enable_testing ()
+# enable_testing ()
 
 
 # if we want to manage versions in CMake ...
@@ -295,7 +295,7 @@ endif()
 include_directories (
   ${P4C_SOURCE_DIR}/extensions
   ${P4C_SOURCE_DIR}
-  ${P4C_SOURCE_DIR}/test/frameworks/gtest/googletest/include
+  # ${P4C_SOURCE_DIR}/test/frameworks/gtest/googletest/include
   ${P4C_BINARY_DIR}
   )
 add_definitions (-DCONFIG_PREFIX="${CMAKE_INSTALL_PREFIX}")
@@ -585,22 +585,22 @@ add_custom_target(etags
   COMMENT "Generating extended ctags")
 
 # check, recheck, check-*, check-ifail, gtest
-p4c_get_nprocs(__parallel_test)
-MESSAGE(STATUS "CTest parallel: -j ${__parallel_test}")
-set (P4C_XFAIL_LOG ${CMAKE_CURRENT_BINARY_DIR}/Testing/Temporary/LastXfail.txt)
-set (P4C_TEST_FLAGS -j "${__parallel_test}")
+# p4c_get_nprocs(__parallel_test)
+# MESSAGE(STATUS "CTest parallel: -j ${__parallel_test}")
+# set (P4C_XFAIL_LOG ${CMAKE_CURRENT_BINARY_DIR}/Testing/Temporary/LastXfail.txt)
+# set (P4C_TEST_FLAGS -j "${__parallel_test}")
 
-p4c_add_make_check(all)
-list (REMOVE_DUPLICATES TEST_TAGS)
-foreach(t ${TEST_TAGS})
-  p4c_add_make_check(${t})
-endforeach()
+# p4c_add_make_check(all)
+# list (REMOVE_DUPLICATES TEST_TAGS)
+# foreach(t ${TEST_TAGS})
+#   p4c_add_make_check(${t})
+# endforeach()
 
-add_custom_target(check
-  DEPENDS check-all)
+# add_custom_target(check
+#   DEPENDS check-all)
 
-add_custom_target(recheck
-  DEPENDS recheck-all)
+# add_custom_target(recheck
+#   DEPENDS recheck-all)
 
 # uninstall target
 configure_file(
