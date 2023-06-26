@@ -20,26 +20,31 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/simple_switch/version.h.cmake"
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/psa_switch/version.h.cmake"
   "${CMAKE_CURRENT_BINARY_DIR}/psa_switch/version.h" @ONLY)
 
-# sources for backend executable
+set(BMV2_SIMPLE_SWITCH_LIB_SRCS
+  simple_switch/midend.cpp
+  simple_switch/midend.h
+  simple_switch/simpleSwitch.cpp
+  simple_switch/simpleSwitch.h
+  simple_switch/options.h
+)
 set (BMV2_SIMPLE_SWITCH_SRCS
     simple_switch/main.cpp
-    simple_switch/midend.cpp
-    simple_switch/midend.h
-    simple_switch/simpleSwitch.cpp
-    simple_switch/simpleSwitch.h
-    simple_switch/options.h
+    ${BMV2_SIMPLE_SWITCH_LIB_SRCS}
     )
 
+set(BMV2_PSA_SWITCH_LIB_SRCS
+  psa_switch/midend.cpp
+  psa_switch/midend.h
+  psa_switch/psaSwitch.cpp
+  psa_switch/psaSwitch.h
+  psa_switch/psaProgramStructure.cpp
+  psa_switch/psaProgramStructure.h
+  psa_switch/options.cpp
+  psa_switch/options.h
+)
 set (BMV2_PSA_SWITCH_SRCS
     psa_switch/main.cpp
-    psa_switch/midend.cpp
-    psa_switch/midend.h
-    psa_switch/psaSwitch.cpp
-    psa_switch/psaSwitch.h
-    psa_switch/psaProgramStructure.cpp
-    psa_switch/psaProgramStructure.h
-    psa_switch/options.cpp
-    psa_switch/options.h
+    ${BMV2_PSA_SWITCH_LIB_SRCS}
     )
 
 set (BMV2_BACKEND_COMMON_SRCS
@@ -84,6 +89,18 @@ set (IR_DEF_FILES ${IR_DEF_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/bmv2.def PARENT_SC
 
 add_library(bmv2backend ${P4C_STATIC_BUILD} ${BMV2_BACKEND_COMMON_SRCS})
 add_dependencies(bmv2backend ir-generated frontend)
+
+# build the ss lib
+add_library(bmv2ss ${P4C_STATIC_BUILD} ${BMV2_SIMPLE_SWITCH_LIB_SRCS})
+target_link_libraries(bmv2ss bmv2backend ${P4C_LIBRARIES} ${P4C_LIB_DEPS})
+
+# build the psa lib
+add_library(bmv2psa ${P4C_STATIC_BUILD} ${BMV2_PSA_SWITCH_LIB_SRCS})
+target_link_libraries(bmv2psa bmv2backend ${P4C_LIBRARIES} ${P4C_LIB_DEPS})
+
+# build the bmv2 lib
+add_library(bmv2 ${P4C_STATIC_BUILD} ${BMV2_SIMPLE_SWITCH_LIB_SRCS} ${BMV2_PSA_SWITCH_LIB_SRCS})
+target_link_libraries(bmv2 bmv2backend ${P4C_LIBRARIES} ${P4C_LIB_DEPS})
 
 add_executable(p4c-bm2-ss ${BMV2_SIMPLE_SWITCH_SRCS})
 target_link_libraries (p4c-bm2-ss bmv2backend ${P4C_LIBRARIES} ${P4C_LIB_DEPS})

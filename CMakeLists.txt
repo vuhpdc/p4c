@@ -30,16 +30,16 @@ set (P4C_ARTIFACTS_OUTPUT_DIRECTORY share/p4c)
 set (CMAKE_USE_RELATIVE_PATHS 1)
 
 OPTION (ENABLE_DOCS "Build the documentation" OFF)
-OPTION (ENABLE_GTESTS "Enable building and running GTest unit tests" ON)
+OPTION (ENABLE_GTESTS "Enable building and running GTest unit tests" OFF)               # netcl: turn off
 OPTION (ENABLE_BMV2 "Build the BMV2 backend (required for the full test suite)" ON)
-OPTION (ENABLE_EBPF "Build the EBPF backend (required for the full test suite)" ON)
-OPTION (ENABLE_UBPF "Build the uBPF backend (required for the full test suite)" ON)
-OPTION (ENABLE_DPDK "Build the DPDK backend (required for the full test suite)" ON)
-OPTION (ENABLE_P4TEST "Build the P4Test backend (required for the full test suite)" ON)
+OPTION (ENABLE_EBPF "Build the EBPF backend (required for the full test suite)" OFF)    # netcl: turn off
+OPTION (ENABLE_UBPF "Build the uBPF backend (required for the full test suite)" OFF)    # netcl: turn off
+OPTION (ENABLE_DPDK "Build the DPDK backend (required for the full test suite)" OFF)    # netcl: turn off
+OPTION (ENABLE_P4TEST "Build the P4Test backend (required for the full test suite)" OFF)# netcl: turn off
 OPTION (ENABLE_TEST_TOOLS "Build the P4Tools development platform" OFF)
-OPTION (ENABLE_P4C_GRAPHS "Build the p4c-graphs backend" ON)
+OPTION (ENABLE_P4C_GRAPHS "Build the p4c-graphs backend" OFF)
 OPTION (ENABLE_PROTOBUF_STATIC "Link against Protobuf statically" ON)
-OPTION (ENABLE_GC "Use libgc" ON)
+OPTION (ENABLE_GC "Use libgc" OFF)                                                      # netcl: turn off
 OPTION (ENABLE_MULTITHREAD "Use multithreading" OFF)
 OPTION (ENABLE_LTO "Enable Link Time Optimization (LTO)" OFF)
 OPTION (ENABLE_WERROR "Treat warnings as errors" OFF)
@@ -488,40 +488,40 @@ install (DIRECTORY ${P4C_SOURCE_DIR}/p4include
   DESTINATION ${P4C_ARTIFACTS_OUTPUT_DIRECTORY})
 
 ########################################## Linters Begin ##########################################
-include(Linters)
+# include(Linters) # netcl: turn off
 ########################################### Linters End ###########################################
 
 
 # tags, etags
-set (CTAGS_DIRS backends extensions frontends ir lib tools midend)
-add_custom_target(tags
-  COMMAND ctags -R --langmap=C++:+.def,Flex:+.l,YACC:+.ypp -I abstract=class -I interface=class ${CTAGS_DIRS}
-  COMMAND cd tools/ir-generator && ctags -R --langmap=Flex:+.l,YACC:+.ypp . ../../lib
-  WORKING_DIRECTORY ${P4C_SOURCE_DIR}
-  COMMENT "Generating ctags")
-add_custom_target(etags
-  COMMAND ctags -e -R --langmap=C++:+.def,Flex:+.l,YACC:+.ypp -I abstract=class -I interface=class ${CTAGS_DIRS}
-  COMMAND cd tools/ir-generator && ctags -e -R --langmap=Flex:+.l,YACC:+.ypp . ../../lib
-  WORKING_DIRECTORY ${P4C_SOURCE_DIR}
-  COMMENT "Generating extended ctags")
+# set (CTAGS_DIRS backends extensions frontends ir lib tools midend)
+# add_custom_target(tags
+#   COMMAND ctags -R --langmap=C++:+.def,Flex:+.l,YACC:+.ypp -I abstract=class -I interface=class ${CTAGS_DIRS}
+#   COMMAND cd tools/ir-generator && ctags -R --langmap=Flex:+.l,YACC:+.ypp . ../../lib
+#   WORKING_DIRECTORY ${P4C_SOURCE_DIR}
+#   COMMENT "Generating ctags")
+# add_custom_target(etags
+#   COMMAND ctags -e -R --langmap=C++:+.def,Flex:+.l,YACC:+.ypp -I abstract=class -I interface=class ${CTAGS_DIRS}
+#   COMMAND cd tools/ir-generator && ctags -e -R --langmap=Flex:+.l,YACC:+.ypp . ../../lib
+#   WORKING_DIRECTORY ${P4C_SOURCE_DIR}
+#   COMMENT "Generating extended ctags")
 
-# check, recheck, check-*, check-ifail, gtest
-p4c_get_nprocs(__parallel_test)
-MESSAGE(STATUS "CTest parallel: -j ${__parallel_test}")
-set (P4C_XFAIL_LOG ${CMAKE_CURRENT_BINARY_DIR}/Testing/Temporary/LastXfail.txt)
-set (P4C_TEST_FLAGS -j "${__parallel_test}")
+# # check, recheck, check-*, check-ifail, gtest
+# p4c_get_nprocs(__parallel_test)
+# MESSAGE(STATUS "CTest parallel: -j ${__parallel_test}")
+# set (P4C_XFAIL_LOG ${CMAKE_CURRENT_BINARY_DIR}/Testing/Temporary/LastXfail.txt)
+# set (P4C_TEST_FLAGS -j "${__parallel_test}")
 
-p4c_add_make_check(all)
-list (REMOVE_DUPLICATES TEST_TAGS)
-foreach(t ${TEST_TAGS})
-  p4c_add_make_check(${t})
-endforeach()
+# p4c_add_make_check(all)
+# list (REMOVE_DUPLICATES TEST_TAGS)
+# foreach(t ${TEST_TAGS})
+#   p4c_add_make_check(${t})
+# endforeach()
 
-add_custom_target(check
-  DEPENDS check-all)
+# add_custom_target(check
+#   DEPENDS check-all)
 
-add_custom_target(recheck
-  DEPENDS recheck-all)
+# add_custom_target(recheck
+#   DEPENDS recheck-all)
 
 # uninstall target
 configure_file(
