@@ -46,7 +46,7 @@ OPTION (ENABLE_WERROR "Treat warnings as errors" OFF)
 OPTION (ENABLE_SANITIZERS "Enable sanitizers" OFF)
 OPTION (BUILD_STATIC_RELEASE "Build a statically linked release binary" OFF)
 OPTION (BUILD_AUTO_VAR_INIT_PATTERN "Initialize variables with pattern during build" ON)
-OPTION (ENABLE_IWYU "Enable checking includes with IWYU" ON)
+OPTION (ENABLE_IWYU "Enable checking includes with IWYU" OFF)
 # Support a legacy option. TODO: Remove?
 OPTION (ENABLE_UNIFIED_COMPILATION "Enable CMAKE_UNITY_BUILD" OFF)
 
