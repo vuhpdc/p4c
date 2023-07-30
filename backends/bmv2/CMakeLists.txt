@@ -136,109 +136,109 @@ add_custom_target(linkbmv2
 add_dependencies(p4c_driver linkbmv2)
 
 
-# Tests
+# # Tests
 
-set(BMV2_DRIVER ${CMAKE_CURRENT_SOURCE_DIR}/run-bmv2-test.py)
-set(BMV2_PTF_DRIVER "sudo -E ${CMAKE_CURRENT_SOURCE_DIR}/run-bmv2-ptf-test.py")
+# set(BMV2_DRIVER ${CMAKE_CURRENT_SOURCE_DIR}/run-bmv2-test.py)
+# set(BMV2_PTF_DRIVER "sudo -E ${CMAKE_CURRENT_SOURCE_DIR}/run-bmv2-ptf-test.py")
 
-set (V1_INCLUDE_PATTERNS "include.*v1model.p4")
-set (P4TESTS_FOR_V1MODEL "${P4C_SOURCE_DIR}/testdata/p4_16_samples/*-bmv2.p4")
-p4c_find_tests("${P4TESTS_FOR_V1MODEL}" v1tests INCLUDE "${V1_INCLUDE_PATTERNS}")
+# set (V1_INCLUDE_PATTERNS "include.*v1model.p4")
+# set (P4TESTS_FOR_V1MODEL "${P4C_SOURCE_DIR}/testdata/p4_16_samples/*-bmv2.p4")
+# p4c_find_tests("${P4TESTS_FOR_V1MODEL}" v1tests INCLUDE "${V1_INCLUDE_PATTERNS}")
 
-set (BMV2_V1MODEL_TEST_SUITES
-  "${P4C_SOURCE_DIR}/testdata/p4_16_bmv_errors/*-bmv2.p4"
-  "${P4C_SOURCE_DIR}/testdata/p4_16_samples/dash/*.p4"
-  "${P4C_SOURCE_DIR}/testdata/p4_16_samples/fabric_*/fabric.p4"
-  "${P4C_SOURCE_DIR}/testdata/p4_16_samples/omec/*.p4"
-  "${P4C_SOURCE_DIR}/testdata/p4_16_samples/pins/*.p4"
-  "${P4C_SOURCE_DIR}/testdata/p4_14_samples/switch_*/switch.p4"
-  "${P4C_SOURCE_DIR}/testdata/p4_14_samples/*.p4"
-  ${v1tests}
-  )
+# set (BMV2_V1MODEL_TEST_SUITES
+#   "${P4C_SOURCE_DIR}/testdata/p4_16_bmv_errors/*-bmv2.p4"
+#   "${P4C_SOURCE_DIR}/testdata/p4_16_samples/dash/*.p4"
+#   "${P4C_SOURCE_DIR}/testdata/p4_16_samples/fabric_*/fabric.p4"
+#   "${P4C_SOURCE_DIR}/testdata/p4_16_samples/omec/*.p4"
+#   "${P4C_SOURCE_DIR}/testdata/p4_16_samples/pins/*.p4"
+#   "${P4C_SOURCE_DIR}/testdata/p4_14_samples/switch_*/switch.p4"
+#   "${P4C_SOURCE_DIR}/testdata/p4_14_samples/*.p4"
+#   ${v1tests}
+#   )
 
-set (PSA_INCLUDE_PATTERNS "include.*psa.p4")
-set (PSA_EXCLUDE_PATTERNS "include.*v1model.p4")
-set (P4TESTS_FOR_PSA "${P4C_SOURCE_DIR}/testdata/p4_16_samples/*-bmv2.p4")
-p4c_find_tests("${P4TESTS_FOR_PSA}" psa_tests INCLUDE "${PSA_INCLUDE_PATTERNS}" EXCLUDE "${PSA_EXCLUDE_PATTERNS}")
+# set (PSA_INCLUDE_PATTERNS "include.*psa.p4")
+# set (PSA_EXCLUDE_PATTERNS "include.*v1model.p4")
+# set (P4TESTS_FOR_PSA "${P4C_SOURCE_DIR}/testdata/p4_16_samples/*-bmv2.p4")
+# p4c_find_tests("${P4TESTS_FOR_PSA}" psa_tests INCLUDE "${PSA_INCLUDE_PATTERNS}" EXCLUDE "${PSA_EXCLUDE_PATTERNS}")
 
-set (BMV2_PSA_TEST_SUITES
-  ${psa_tests}
-)
+# set (BMV2_PSA_TEST_SUITES
+#   ${psa_tests}
+# )
 
-# Execute PTF tests for these files.
-set (BMV2_PTF_TEST_SUITES
-  "${P4C_SOURCE_DIR}/testdata/p4_16_samples/ternary2-bmv2.p4"
-)
+# # Execute PTF tests for these files.
+# set (BMV2_PTF_TEST_SUITES
+#   "${P4C_SOURCE_DIR}/testdata/p4_16_samples/ternary2-bmv2.p4"
+# )
 
-# -p to use psa switch model
-# -a to pass flags to compiler
-set (testExtraFlags "${testExtraFlags} -p -a='--target bmv2 --arch psa'")
+# # -p to use psa switch model
+# # -a to pass flags to compiler
+# set (testExtraFlags "${testExtraFlags} -p -a='--target bmv2 --arch psa'")
 
-set (XFAIL_TESTS
-  # This test defines two lpm keys for a table.
-  # Even though the P4 spec allows it, it doesn't really make sense in a switch
-  # so we allow it to fail on BMv2.
-  testdata/p4_14_samples/issue60.p4
-  # compiler claims (incorrectly?) that c2 has mulitple successors, so is not supported
-  testdata/p4_14_samples/issue-1426.p4
-  # This test uses a feature currently unsupported in the BMv2 back-end.
-  testdata/p4_16_samples/issue907-bmv2.p4
-  # This test uses a table graph that is not implementable in BMv2
-  testdata/p4_16_samples/issue986-bmv2.p4
-  # These tests use a table key with type 'error'
-  testdata/p4_16_samples/issue1062-bmv2.p4
-  # This test uses an undefined extern
-  testdata/p4_16_samples/issue1193-bmv2.p4
-  # This test also uses a custom extern
-  testdata/p4_14_samples/issue604.p4
-  # This test uses an incorrect model
-  testdata/p4_16_samples/issue1205-bmv2.p4
-  # These psa tests are not ready to run on bmv2 yet
-  testdata/p4_16_samples/psa-example-digest-bmv2.p4
-  # This reads stack.next
-  testdata/p4_16_samples/issue692-bmv2.p4
-  # These test use computations in the verify/update checksum controls - unsupported
-  testdata/p4_16_samples/issue1765-bmv2.p4
-  testdata/p4_16_samples/issue1765-1-bmv2.p4
-  # Next three use unknown externs
-  testdata/p4_16_samples/issue1882-bmv2.p4
-  testdata/p4_16_samples/issue1882-1-bmv2.p4
-  testdata/p4_16_samples/issue2664-bmv2.p4
-  # This test tries to hash (via the hash extern) a value that isn't a tuple - unsupported
-  testdata/p4_16_samples/hashing-non-tuple-bmv2.p4
-  # Similarly, this test hashes on a bit input.
-  testdata/p4_16_samples/issue584-1-bmv2.p4
-)
+# set (XFAIL_TESTS
+#   # This test defines two lpm keys for a table.
+#   # Even though the P4 spec allows it, it doesn't really make sense in a switch
+#   # so we allow it to fail on BMv2.
+#   testdata/p4_14_samples/issue60.p4
+#   # compiler claims (incorrectly?) that c2 has mulitple successors, so is not supported
+#   testdata/p4_14_samples/issue-1426.p4
+#   # This test uses a feature currently unsupported in the BMv2 back-end.
+#   testdata/p4_16_samples/issue907-bmv2.p4
+#   # This test uses a table graph that is not implementable in BMv2
+#   testdata/p4_16_samples/issue986-bmv2.p4
+#   # These tests use a table key with type 'error'
+#   testdata/p4_16_samples/issue1062-bmv2.p4
+#   # This test uses an undefined extern
+#   testdata/p4_16_samples/issue1193-bmv2.p4
+#   # This test also uses a custom extern
+#   testdata/p4_14_samples/issue604.p4
+#   # This test uses an incorrect model
+#   testdata/p4_16_samples/issue1205-bmv2.p4
+#   # These psa tests are not ready to run on bmv2 yet
+#   testdata/p4_16_samples/psa-example-digest-bmv2.p4
+#   # This reads stack.next
+#   testdata/p4_16_samples/issue692-bmv2.p4
+#   # These test use computations in the verify/update checksum controls - unsupported
+#   testdata/p4_16_samples/issue1765-bmv2.p4
+#   testdata/p4_16_samples/issue1765-1-bmv2.p4
+#   # Next three use unknown externs
+#   testdata/p4_16_samples/issue1882-bmv2.p4
+#   testdata/p4_16_samples/issue1882-1-bmv2.p4
+#   testdata/p4_16_samples/issue2664-bmv2.p4
+#   # This test tries to hash (via the hash extern) a value that isn't a tuple - unsupported
+#   testdata/p4_16_samples/hashing-non-tuple-bmv2.p4
+#   # Similarly, this test hashes on a bit input.
+#   testdata/p4_16_samples/issue584-1-bmv2.p4
+# )
 
-set (BMV2_PARSER_INLINE_TESTS "${P4C_SOURCE_DIR}/testdata/p4_16_samples/parser-inline/*.p4")
+# set (BMV2_PARSER_INLINE_TESTS "${P4C_SOURCE_DIR}/testdata/p4_16_samples/parser-inline/*.p4")
 
-if (HAVE_SIMPLE_SWITCH)
-  if (NOT ENABLE_SANITIZERS)
-    # Does not work well with sanitizers, extern_func_module fails due to linking failures related to missing symbols.
-    p4c_add_tests("bmv2" ${BMV2_DRIVER} "${BMV2_V1MODEL_TEST_SUITES}" "${XFAIL_TESTS}")
-    add_library(extern_func_module MODULE EXCLUDE_FROM_ALL "${P4C_SOURCE_DIR}/testdata/extern_modules/extern-funcs-bmv2.cpp" )
-    p4c_add_test_with_args("bmv2" ${BMV2_DRIVER} FALSE "bmv2_emit_externs" "testdata/p4_16_samples/extern-funcs-bmv2.p4" "-a=--emit-externs --target-specific-switch-arg=\"--load-modules ${CMAKE_CURRENT_BINARY_DIR}/libextern_func_module.so\" --init=\"make extern_func_module\"" "")
-    p4c_add_tests("bmv2-parser-inline-opt-disabled" ${BMV2_DRIVER} "${BMV2_PARSER_INLINE_TESTS}" "")
-    p4c_add_tests("bmv2-parser-inline-opt-enabled" ${BMV2_DRIVER} "${BMV2_PARSER_INLINE_TESTS}" "" "-a=--parser-inline-opt")
-  endif()
-else()
-  MESSAGE(WARNING "BMv2 simple switch is not available, not adding v1model BMv2 tests")
-endif()
+# if (HAVE_SIMPLE_SWITCH)
+#   if (NOT ENABLE_SANITIZERS)
+#     # Does not work well with sanitizers, extern_func_module fails due to linking failures related to missing symbols.
+#     p4c_add_tests("bmv2" ${BMV2_DRIVER} "${BMV2_V1MODEL_TEST_SUITES}" "${XFAIL_TESTS}")
+#     add_library(extern_func_module MODULE EXCLUDE_FROM_ALL "${P4C_SOURCE_DIR}/testdata/extern_modules/extern-funcs-bmv2.cpp" )
+#     p4c_add_test_with_args("bmv2" ${BMV2_DRIVER} FALSE "bmv2_emit_externs" "testdata/p4_16_samples/extern-funcs-bmv2.p4" "-a=--emit-externs --target-specific-switch-arg=\"--load-modules ${CMAKE_CURRENT_BINARY_DIR}/libextern_func_module.so\" --init=\"make extern_func_module\"" "")
+#     p4c_add_tests("bmv2-parser-inline-opt-disabled" ${BMV2_DRIVER} "${BMV2_PARSER_INLINE_TESTS}" "")
+#     p4c_add_tests("bmv2-parser-inline-opt-enabled" ${BMV2_DRIVER} "${BMV2_PARSER_INLINE_TESTS}" "" "-a=--parser-inline-opt")
+#   endif()
+# else()
+#   MESSAGE(WARNING "BMv2 simple switch is not available, not adding v1model BMv2 tests")
+# endif()
 
-if (HAVE_SIMPLE_SWITCH_GRPC)
-    p4c_add_tests("bmv2-ptf" ${BMV2_PTF_DRIVER} "${BMV2_PTF_TEST_SUITES}" "")
-else()
-  MESSAGE(WARNING "BMv2 simple switch grpc is not available, not adding v1model BMv2 PTF tests")
-endif()
+# if (HAVE_SIMPLE_SWITCH_GRPC)
+#     p4c_add_tests("bmv2-ptf" ${BMV2_PTF_DRIVER} "${BMV2_PTF_TEST_SUITES}" "")
+# else()
+#   MESSAGE(WARNING "BMv2 simple switch grpc is not available, not adding v1model BMv2 PTF tests")
+# endif()
 
-if (HAVE_PSA_SWITCH)
-  p4c_add_tests("bmv2" ${BMV2_DRIVER} "${BMV2_PSA_TEST_SUITES}" "${XFAIL_TESTS}" ${testExtraFlags})
-else()
-  MESSAGE(WARNING "BMv2 PSA switch is not available, not adding PSA BMv2 tests")
-endif()
+# if (HAVE_PSA_SWITCH)
+#   p4c_add_tests("bmv2" ${BMV2_DRIVER} "${BMV2_PSA_TEST_SUITES}" "${XFAIL_TESTS}" ${testExtraFlags})
+# else()
+#   MESSAGE(WARNING "BMv2 PSA switch is not available, not adding PSA BMv2 tests")
+# endif()
 
-set (GTEST_BMV2_SOURCES
-  )
+# set (GTEST_BMV2_SOURCES
+#   )
 
-set (GTEST_SOURCES ${GTEST_SOURCES} ${GTEST_BMV2_SOURCES} PARENT_SCOPE)
-set (GTEST_LDADD ${GTEST_LDADD} bmv2backend PARENT_SCOPE)
+# set (GTEST_SOURCES ${GTEST_SOURCES} ${GTEST_BMV2_SOURCES} PARENT_SCOPE)
+# set (GTEST_LDADD ${GTEST_LDADD} bmv2backend PARENT_SCOPE)

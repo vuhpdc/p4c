@@ -63,7 +63,7 @@ set (BASE_IR_DEF_FILES
 
 set (IR_DEF_FILES ${IR_DEF_FILES} ${BASE_IR_DEF_FILES} PARENT_SCOPE)
 
-add_library (ir STATIC ${IR_SRCS})
+add_library (ir SHARED ${IR_SRCS})
 add_dependencies(ir genIR)
 
 
