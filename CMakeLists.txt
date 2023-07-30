@@ -44,7 +44,7 @@ OPTION (ENABLE_MULTITHREAD "Use multithreading" OFF)
 OPTION (ENABLE_LTO "Enable Link Time Optimization (LTO)" OFF)
 OPTION (ENABLE_WERROR "Treat warnings as errors" OFF)
 OPTION (ENABLE_SANITIZERS "Enable sanitizers" OFF)
-OPTION (BUILD_STATIC_RELEASE "Build a statically linked release binary" OFF)
+OPTION (BUILD_STATIC_RELEASE "Build a statically linked release binary" ON)
 OPTION (BUILD_AUTO_VAR_INIT_PATTERN "Initialize variables with pattern during build" OFF)
 OPTION (ENABLE_IWYU "Enable checking includes with IWYU" OFF)
 # Support a legacy option. TODO: Remove?
