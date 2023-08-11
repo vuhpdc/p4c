@@ -37,7 +37,7 @@ OPTION (ENABLE_UBPF "Build the uBPF backend (required for the full test suite)" 
 OPTION (ENABLE_DPDK "Build the DPDK backend (required for the full test suite)" OFF)    # netcl: turn off
 OPTION (ENABLE_P4TEST "Build the P4Test backend (required for the full test suite)" OFF)# netcl: turn off
 OPTION (ENABLE_TEST_TOOLS "Build the P4Tools development platform" OFF)
-OPTION (ENABLE_P4C_GRAPHS "Build the p4c-graphs backend" OFF)
+OPTION (ENABLE_P4C_GRAPHS "Build the p4c-graphs backend" ON)
 OPTION (ENABLE_PROTOBUF_STATIC "Link against Protobuf statically" ON)
 OPTION (ENABLE_GC "Use libgc" OFF)                                                      # netcl: turn off
 OPTION (ENABLE_MULTITHREAD "Use multithreading" OFF)
