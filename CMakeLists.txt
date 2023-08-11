@@ -398,7 +398,7 @@ endif ()
 if (ENABLE_EBPF)
     add_subdirectory (backends/ebpf)
 endif ()
-if (ENABLE_P4C_GRAPHS AND HAVE_LIBBOOST_GRAPH EQUAL 1)
+if (ENABLE_P4C_GRAPHS) # AND HAVE_LIBBOOST_GRAPH EQUAL 1
   add_subdirectory (backends/graphs)
 endif ()
 if (ENABLE_P4TEST)
